@@ -6,7 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    <style>
+      input[disabled] {
+        background-color: #f9f9f9;
+      }
+    </style>
+
     <script type="text/javascript">
+
+      var myChrono;
+
+      function ticker() {
+        if (myChrono) {
+          tickerReset()
+        } else {
+          tickerStart()
+        }
+      };
+
+      function tickerStart() {
+        myChrono = setTimeout(function(){
+          myFunction();
+        }, 4000);
+        // Avg time to type a char is 2sec
+      };
+      function tickerReset() {
+        clearTimeout(myChrono);
+        tickerStart();
+      };
+
+      function reloadPage() {
+        location.reload();
+      };
 
       // CASES for reference
         // 6988-7003
@@ -21,6 +52,7 @@
       var minLimit, maxLimit;
       var duplicates = [];
       var finalArr = [];
+
 
       function myFunction() {
 
@@ -74,21 +106,19 @@
         document.getElementById('inputData').innerHTML = 'Input data was ' + inputData;
         document.getElementById('outputDups').innerHTML = 'Duplicates are ' + duplicates;
         document.getElementById('outputNewArr').innerHTML = 'New appended Array is ->  ' + finalArr;
+        document.getElementById('inputs').disabled = true;
       };
 
     </script>
 
   </head>
   <body style="word-break: break-word;">
-    <h3>Please paste your data sets, as it'll be executed on keyup</h3>
+    <h3>You may type or paste your data sets as it'll be auto executed once you're done typing</h3>
 
     <h5 style="color: #800000;">
-      *Beware on successive key presses function will be executed producing undesired output in later executions
+      NOTE: Please reload the page before entering new data set.
     </h5>
-    <h5 style="color: #800000;">
-      NOTE: Reload the page before entering new data set.
-    </h5>
-    
+
     <h5>
       Existing data is
       <div>
@@ -96,7 +126,8 @@
       </div>
     </h5>
     </br>
-    <input type="text" name="userValues" value="" id="inputs" onkeyup="myFunction()">
+    <input type="text" name="userValues" value="" id="inputs" onkeyup="ticker()"  onpaste="ticker()">
+    <button type="button" name="button" onclick="reloadPage();">Reload Page</button>
     </br>
     <div id="existingData"></div></br>
     <div id="inputData"></div></br>
