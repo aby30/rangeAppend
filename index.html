@@ -1,0 +1,121 @@
+
+<html>
+  <head>
+    <title>BMS #1</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+      // CASES for reference
+        // 6988-7003
+        // 7000,6000,8000-8005
+        // 7000,6000,8000-8005,6988-7003
+        // 7025,6980,7010-7020,6988-7003
+        // 7990,7980,8000-8005,6988-7003
+        // 7990,7980,8000-8005,6988
+        // 7990,7980,8000-8005,7003-6988,8000-8005   ONLY if we can give range from HIGH to LOW
+
+      var existingArr = [7000,7001,7002,7003,7004,7005];
+      var minLimit, maxLimit;
+      var duplicates = [];
+      var finalArr = [];
+
+      function myFunction() {
+
+        var inputData = document.getElementById('inputs').value;
+
+        var moreThan1 = inputData.split(',');
+
+        for (var i = 0; i < moreThan1.length; i++) {
+          existingArr.push(moreThan1[i]);
+        }
+
+        var stringsArr = existingArr.map(String);
+
+        for (var i = 0; i < stringsArr.length; i++) {
+          var inCurr = stringsArr[i].indexOf("-");
+          if (inCurr != -1) {
+            var rangeCheck = stringsArr[i].split('-');
+            //For handling Lexical comparision in JS
+            var range0Int = parseInt(rangeCheck[0]);
+            var range1Int = parseInt(rangeCheck[1]);
+            if (range0Int < range1Int) {
+              minLimit = range0Int;
+              maxLimit = range1Int;
+            } else if (range0Int > range1Int) {
+              minLimit = range1Int;
+              maxLimit = range0Int;
+            } else if (range0Int == range1Int) {
+              minLimit = range0Int;
+              maxLimit = range0Int;
+            }
+
+            delete stringsArr[i];
+            for (var j = minLimit; j <= maxLimit; j++) {
+              stringsArr.push(j);
+            }
+            stringsArr = stringsArr.map(String);
+          }
+        }
+        //For handling Lexical sorting using SORT
+        stringsArr.sort(function(a, b){return a-b});
+        // To remove empty values from array
+        stringsArr = stringsArr.filter(function(e){return e});
+
+        for(var i = 0; i < stringsArr.length; i++){
+          if(finalArr.includes(stringsArr[i]) && !duplicates.includes(stringsArr[i]))
+            duplicates.push(stringsArr[i])
+          else
+            finalArr.push(stringsArr[i]);
+        }
+
+        document.getElementById('inputData').innerHTML = 'Input data was ' + inputData;
+        document.getElementById('outputDups').innerHTML = 'Duplicates are ' + duplicates;
+        document.getElementById('outputNewArr').innerHTML = 'New appended Array is ->  ' + finalArr;
+      };
+
+    </script>
+
+  </head>
+  <body style="word-break: break-word;">
+    <h3>Please paste your data sets, as it'll be executed on keyup</h3>
+    <h5>
+      Existing data is
+      <div>
+        [7000,7001,7002,7003,7004,7005]
+      </div>
+    </h5>
+    <h5 style="color: #800000;">*Beware on successive key presses function will be executed producing undesired output in later executions</h6>
+    </br>
+    <input type="text" name="userValues" value="" id="inputs" onkeyup="myFunction()">
+    </br>
+    <div id="existingData"></div></br>
+    <div id="inputData"></div></br>
+    <div id="outputDups"></div></br>
+    <div id="outputNewArr"></div>
+
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div>
+      <h3>Sample Inputs:</h3>
+      <br>
+      6988-7003 <br>
+      7000,6000,8000-8005 <br>
+      7000,6000,8000-8005,6988-7003 <br>
+      7025,6980,7010-7020,6988-7003 <br>
+      7990,7980,8000-8005,6988-7003 <br>
+      7990,7980,8000-8005,6988 <br>
+      7990,7980,8000-8005,7003-6988,8000-8005 <br>
+      90-100,7000-7015,8000
+
+    </div>
+
+  </body>
+</html>
